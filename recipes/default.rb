@@ -28,6 +28,14 @@ else
     # Install dnsmasq package
     package "dnsmasq"
 
+    template "/etc/dnsmasq.conf" do
+      source "dnsmasq.conf.erb"
+      owner "root"
+      group "root"
+      mode 00644
+      notifies :restart, "service[dnsmasq]"
+    end
+
     template "/etc/dnsmasq.d/dns_caching.conf" do
       source "dns_caching.conf.erb"
       owner "root"
@@ -35,9 +43,6 @@ else
       mode 00644
       notifies :restart, "service[dnsmasq]"
     end
-
-    # Install dnsmasq package
-    package "dnsmasq"
 
     # Restart the dnsmasq service only if configuration changes were made
     service "dnsmasq" do
