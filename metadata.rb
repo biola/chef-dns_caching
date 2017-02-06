@@ -5,6 +5,6 @@ license 'Apache 2.0'
 description 'Installs dnsmasq to provide DNS caching'
 source_url 'https://github.com/biola/chef-dns_caching'
 issues_url 'https://github.com/biola/chef-dns_caching/issues'
-version '1.2.0'
+version '2.0.0'
 
 depends 'resolver', '~> 1.3'
