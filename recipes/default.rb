@@ -25,8 +25,9 @@ if node['resolver']['nameservers'].empty? ||
   return
 end
 
-# For Ubuntu 12+ systems
-if node['platform'] == 'ubuntu' && node['platform_version'].to_i >= 12
+# For Ubuntu systems
+case node['platform_family']
+when 'debian'
   # Pre-stage the dnsmasq configuration file and defaults file
   directory '/etc/dnsmasq.d' do
     owner 'root'
@@ -60,10 +61,9 @@ if node['platform'] == 'ubuntu' && node['platform_version'].to_i >= 12
   service 'dnsmasq' do
     action :nothing
   end
-# For all other platforms
-else
-  # Install dnsmasq package
-  package 'dnsmasq'
+# RHEL/CentOS
+when 'rhel'
+  package %w(dnsmasq bind-utils)
 
   template '/etc/dnsmasq.conf' do
     source 'dnsmasq.conf.erb'
@@ -81,11 +81,11 @@ else
     notifies :restart, 'service[dnsmasq]'
   end
 
-  # Restart the dnsmasq service only if configuration changes were made
-  service 'dnsmasq' do
-    action :nothing
-  end
-
   # Use the resolver cookbook to update /etc/resolv.conf
-  include_recipe 'resolver'
+  include_recipe 'resolver::default'
+
+  # dnsmasq is disabled by default
+  service 'dnsmasq' do
+    action [:enable, :start]
+  end
 end
