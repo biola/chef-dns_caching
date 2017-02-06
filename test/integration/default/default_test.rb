@@ -14,18 +14,18 @@ end
 if os[:family] == 'debian'
   describe file('/etc/resolv.conf') do
     it { should exist }
-    its('content') { should match(%r{nameserver 127.0.0.1}) }
+    its('content') { should match(/nameserver 127.0.0.1/) }
   end
 
   describe file('/etc/dnsmasq.d/dns_caching.conf') do
     it { should exist }
-    its('content') { should match(%r{server=8.8.8.8}) }
+    its('content') { should match(/server=8.8.8.8/) }
   end
 else
   describe file('/etc/resolv.conf') do
     it { should exist }
-    its('content') { should match(%r{nameserver 127.0.0.1}) }
-    its('content') { should match(%r{nameserver 8.8.8.8}) }
+    its('content') { should match(/nameserver 127.0.0.1/) }
+    its('content') { should match(/nameserver 8.8.8.8/) }
   end
 
   describe file('/etc/dnsmasq.d/dns_caching.conf') do
